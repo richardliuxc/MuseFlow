@@ -7,6 +7,8 @@ import 'core/theme.dart';
 import 'services/audio_handler.dart';
 import 'services/download_service.dart';
 import 'services/library_store.dart';
+import 'services/nas_service.dart';
+import 'services/nas_store.dart';
 import 'services/music_repository.dart';
 import 'services/player_service.dart';
 import 'services/radio_repository.dart';
@@ -19,11 +21,13 @@ class MuseFlowApp extends StatefulWidget {
     super.key,
     required this.settings,
     required this.library,
+    required this.nasStore,
     this.audioHandler,
   });
 
   final SettingsStore settings;
   final LibraryStore library;
+  final NasStore nasStore;
   final MuseAudioHandler? audioHandler;
 
   @override
@@ -35,15 +39,18 @@ class _MuseFlowAppState extends State<MuseFlowApp> {
   late final PlayerService _player;
   late final DownloadService _downloads;
   late final RadioRepository _radio;
+  late final NasService _nasService;
 
   @override
   void initState() {
     super.initState();
     _repository = MusicRepository(settings: widget.settings);
+    _nasService = NasService(store: widget.nasStore);
     _player = PlayerService(
       repository: _repository,
       library: widget.library,
       audioHandler: widget.audioHandler,
+      nasService: _nasService,
     );
     _downloads = DownloadService(repository: _repository, library: widget.library);
     _radio = RadioRepository();
@@ -67,6 +74,8 @@ class _MuseFlowAppState extends State<MuseFlowApp> {
         ChangeNotifierProvider<PlayerService>.value(value: _player),
         ChangeNotifierProvider<DownloadService>.value(value: _downloads),
         Provider<RadioRepository>.value(value: _radio),
+        ChangeNotifierProvider<NasStore>.value(value: widget.nasStore),
+        Provider<NasService>.value(value: _nasService),
       ],
       child: MaterialApp(
         title: 'MuseFlow · 沐声',

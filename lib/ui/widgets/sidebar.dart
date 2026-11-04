@@ -7,6 +7,7 @@ import '../../services/library_store.dart';
 import '../../services/player_service.dart';
 import '../actions.dart';
 import '../screens/charts_screen.dart';
+import '../screens/nas_screen.dart';
 import '../screens/playlist_detail_screen.dart';
 import 'artwork.dart';
 import 'common.dart';
@@ -76,6 +77,17 @@ class Sidebar extends StatelessWidget {
             label: '音乐库',
             active: tab == 3,
             onTap: () => onTab(3),
+          ),
+          _NavItem(
+            icon: Icons.cloud_queue_outlined,
+            activeIcon: Icons.cloud_queue_rounded,
+            label: '本地网络',
+            active: false,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const NasScreen()),
+              );
+            },
           ),
           _NavItem(
             icon: Icons.leaderboard_outlined,

@@ -56,6 +56,10 @@ Future<void> downloadSong(BuildContext context, Song song) async {
     showToast(context, '直播电台不支持下载', error: true);
     return;
   }
+  if (song.isNas) {
+    showToast(context, 'NAS 音频会在播放时自动缓存', error: true);
+    return;
+  }
   final service = context.read<DownloadService>();
   if (!service.isSupported) {
     showToast(context, 'Web 端暂不支持离线下载，请使用 App 或桌面端', error: true);
@@ -264,11 +268,15 @@ void showSongMenu(
                   : (downloaded ? Icons.check_circle_outline_rounded : Icons.download_rounded),
               title: song.isRadio
                   ? '直播不可下载'
-                  : (downloaded ? '已下载' : '下载到本地'),
+                  : song.isNas
+                      ? 'NAS 自动缓存'
+                      : (downloaded ? '已下载' : '下载到本地'),
               subtitle: song.isRadio
                   ? '广播为实时流媒体'
-                  : (downloads.isSupported ? null : 'Web 端暂不支持'),
-              enabled: !song.isRadio && downloads.isSupported && !downloaded,
+                  : song.isNas
+                      ? '播放时自动缓存到本机'
+                      : (downloads.isSupported ? null : 'Web 端暂不支持'),
+              enabled: !song.isRadio && !song.isNas && downloads.isSupported && !downloaded,
               onTap: () async {
                 Navigator.pop(sheetContext);
                 await downloadSong(context, song);

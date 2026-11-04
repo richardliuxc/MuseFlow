@@ -1129,15 +1129,22 @@ class _DownloadAction extends StatelessWidget {
     final downloads = context.watch<DownloadService>();
     final song = player.current;
     if (song == null) return const SizedBox.shrink();
-    if (song.isRadio) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8),
+    if (song.isRadio || song.isNas) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.podcasts_rounded, size: 14, color: AppColors.textTertiary),
-            SizedBox(width: 5),
-            Text('直播', style: TextStyle(fontSize: 10.5, color: AppColors.textTertiary)),
+            Icon(
+              song.isRadio ? Icons.podcasts_rounded : Icons.cloud_queue_rounded,
+              size: 14,
+              color: AppColors.textTertiary,
+            ),
+            const SizedBox(width: 5),
+            Text(
+              song.isRadio ? '直播' : 'NAS',
+              style: const TextStyle(fontSize: 10.5, color: AppColors.textTertiary),
+            ),
           ],
         ),
       );

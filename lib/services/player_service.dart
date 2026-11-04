@@ -12,15 +12,18 @@ import 'audio_handler.dart';
 import 'library_store.dart';
 import 'music_repository.dart';
 import 'music_source.dart';
+import 'nas_service.dart';
 
 class PlayerService extends ChangeNotifier {
   PlayerService({
     required MusicRepository repository,
     required LibraryStore library,
     MuseAudioHandler? audioHandler,
+    NasService? nasService,
   })  : _repository = repository,
         _library = library,
-        _audioHandler = audioHandler {
+        _audioHandler = audioHandler,
+        _nasService = nasService {
     _audioHandler?.bind(this);
     _library.addListener(_onLibraryChanged);
     _configure();
@@ -29,6 +32,7 @@ class PlayerService extends ChangeNotifier {
   final MusicRepository _repository;
   final LibraryStore _library;
   final MuseAudioHandler? _audioHandler;
+  final NasService? _nasService;
   final AudioPlayer _player = AudioPlayer();
   final Random _random = Random();
 
@@ -170,7 +174,11 @@ class PlayerService extends ChangeNotifier {
       final localPath = song.extra['file'];
       final directStream = song.extra['stream'];
       final ResolvedStream stream;
-      if (song.isRadio && directStream != null && directStream.isNotEmpty) {
+      if (song.isNas && _nasService != null) {
+        final cachedPath = await _nasService.materialize(song);
+        stream = ResolvedStream(url: cachedPath, song: song, note: '正在从本地网络播放');
+        await _player.setFilePath(cachedPath);
+      } else if (song.isRadio && directStream != null && directStream.isNotEmpty) {
         stream = ResolvedStream(url: directStream, song: song, note: null);
         await _player.setAudioSource(AudioSource.uri(Uri.parse(directStream)));
       } else if (!kIsWeb && localPath != null && localPath.isNotEmpty) {
@@ -205,7 +213,7 @@ class PlayerService extends ChangeNotifier {
   }
 
   Future<void> _loadLyrics(Song song) async {
-    if (song.isRadio) {
+    if (song.isRadio || song.isNas) {
       _lyrics = const [];
       _lyricsLoading = false;
       notifyListeners();

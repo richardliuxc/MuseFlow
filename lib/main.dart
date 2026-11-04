@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'app.dart';
 import 'services/audio_handler.dart';
 import 'services/library_store.dart';
+import 'services/nas_store.dart';
 import 'services/settings_store.dart';
 
 Future<void> main() async {
@@ -41,5 +42,11 @@ Future<void> main() async {
 
   final settings = await SettingsStore.load();
   final library = await LibraryStore.load();
-  runApp(MuseFlowApp(settings: settings, library: library, audioHandler: audioHandler));
+  final nas = await NasStore.load();
+  runApp(MuseFlowApp(
+    settings: settings,
+    library: library,
+    nasStore: nas,
+    audioHandler: audioHandler,
+  ));
 }

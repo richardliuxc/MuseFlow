@@ -35,6 +35,11 @@ class MuseAudioHandler extends BaseAudioHandler {
   }
 
   @override
+  Future<void> fastForward() async {
+    await _player?.toggleCurrentFavorite();
+  }
+
+  @override
   Future<void> seek(Duration position) async {
     await _player?.seek(position);
   }
@@ -96,14 +101,14 @@ class MuseAudioHandler extends BaseAudioHandler {
         controls: [
           MediaControl.skipToPrevious,
           player.isPlaying ? MediaControl.pause : MediaControl.play,
-          MediaControl.skipToNext,
-          MediaControl.custom(
+          MediaControl(
             androidIcon: player.isCurrentFavorite
                 ? 'drawable/ic_favorite'
                 : 'drawable/ic_favorite_border',
             label: player.isCurrentFavorite ? '取消收藏' : '收藏',
-            name: 'favorite',
+            action: MediaAction.fastForward,
           ),
+          MediaControl.skipToNext,
         ],
         systemActions: const {MediaAction.seek},
         androidCompactActionIndices: const [0, 1, 2],

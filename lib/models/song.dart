@@ -33,6 +33,8 @@ class Song {
 
   bool get isRadio => source == 'radio' || extra['radio'] == '1';
 
+  bool get isNas => source == 'nas' || extra['nas'] == '1';
+
   String? get assetPath => extra['asset'];
 
   String get sourceLabel => switch (source) {
@@ -43,6 +45,7 @@ class Song {
         'migu' => '咪咕',
         'demo' => 'MuseFlow',
         'radio' => '广播',
+        'nas' => 'NAS',
         _ => source,
       };
 
@@ -54,6 +57,7 @@ class Song {
         'migu' => const Color(0xFFE6006F),
         'demo' => AppColors.violet,
         'radio' => const Color(0xFFF59E0B),
+        'nas' => const Color(0xFF38BDF8),
         _ => AppColors.cyan,
       };
 

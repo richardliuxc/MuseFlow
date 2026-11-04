@@ -31,6 +31,7 @@ MuseFlow 是一个完整的 Flutter 音乐播放器项目：从品牌 Logo、设
 - **本地音乐库**：我喜欢的音乐、自建歌单、最近播放、离线下载，全部持久化到本机。
 - **商业级界面**：响应式侧边栏 / 底栏、正在播放侧栏、迷你播放器、沉浸式全屏播放页、玻璃拟态、极光背景、等化器动效。
 - **世界广播**：从 RadioHub 数据库精选 520 个实时电台，覆盖 190+ 国家；支持华语 / 欧美 / 日韩 / 世界、类型筛选、搜索、收藏与直播播放。
+- **本地 NAS**：通过 WebDAV 或 SMB 接入群晖、威联通、TrueNAS、Windows 共享等私人音乐库；支持目录浏览、播放全部、收藏与按需缓存。
 - **离线示例曲库**：内置 8 首由程序合成的原创氛围音乐（含封面与歌词），无网络也能完整体验。
 - **品牌资产**：自绘 SVG Logo、应用图标、8 张专辑封面，已适配 Android / iOS / macOS / Web 图标。
 
@@ -80,10 +81,36 @@ python3 tool/gen_radio_catalog.py --db /path/to/radiohub.db
 
 > 广播流由各电台公开提供，MuseFlow 不存储、不转码、不托管任何电台音频；版权归各电台所有。
 
+## 本地 NAS
+
+MuseFlow 可以把 NAS 当作私人音乐源，目录和音频不经过任何中转服务器：
+
+- **WebDAV**：支持 HTTP / HTTPS、Basic Auth、自定义端口与路径，可关闭证书校验以连接自签名家庭 NAS。
+- **SMB**：使用纯 Dart SMB 1 / 2 / 2.1 客户端，默认 445 端口，支持域 / 工作组。
+- **使用方式**：音乐库 → 本地网络，或侧边栏 / 设置 → NAS 服务器。
+- **能力**：浏览目录、播放全部、单曲播放、收藏、队列上一首/下一首。
+- **缓存**：NAS 音频在首次播放时下载到应用临时目录，后续播放直接使用缓存，避免每次拖动都重新走网络。
+- **安全**：服务器密码保存在 `flutter_secure_storage`（Android Keystore / iOS Keychain / macOS Keychain），不会写入歌曲模型或云端；配置文件里只有地址、端口、用户名等非敏感字段。
+
+常见 NAS 配置：
+
+| NAS | WebDAV 路径 | SMB 共享 |
+| --- | --- | --- |
+| 群晖 Synology | 控制面板 → 文件服务 → WebDAV，路径通常为 `/dav` | 共享文件夹名，如 `media` |
+| 威联通 QNAP | 启用 WebDAV，路径以实际设置为准 | 共享文件夹名 |
+| TrueNAS | 配置 WebDAV 共享 | 共享名 + 子目录 |
+| Windows | 需另装 WebDAV 服务 | `\\主机\共享名` 对应共享名 |
+
+> 限制：当前纯 Dart SMB 客户端最高支持 SMB 2.1，强制 SMB 3 的 NAS 可能无法连接；WebDAV 目前支持 Basic Auth，暂未实现 Digest Auth。Web 端无法创建本地缓存，NAS 播放请使用 Android / iOS / macOS 客户端。
+>
+> 测试说明：WebDAV 已用本地 WsgiDAV 服务 + Android 真机完成连接、目录浏览、缓存与播放验证；SMB 代码已接入并通过编译，但本次环境没有可用的 SMB NAS，建议在你的 NAS 上做一次端到端确认。
+
 ## 技术栈
 
 - **Flutter 3.19 / Dart 3.3**，Material 3 自定义主题
 - **just_audio + audio_session + audio_service**：跨平台音频播放、后台媒体会话与通知栏控制
+- **smb_connect + WebDAV**：纯 Dart SMB 1/2/2.1 与 HTTP WebDAV 客户端
+- **flutter_secure_storage**：NAS 密码存入系统安全存储
 - **provider**：轻量状态管理（Player / Library / Settings / Download）
 - **http**：各平台接口客户端，按音源隔离错误与超时
 - **shared_preferences**：收藏、歌单、历史、设置持久化
@@ -107,11 +134,14 @@ lib/
 │   ├── sources/             # 网易云 / 酷我 / 酷狗 / QQ / 咪咕 / 示例
 │   ├── player_service.dart  # 队列、直播流与播放状态机
 │   ├── radio_repository.dart# 广播目录加载、筛选与推荐
+│   ├── nas_store.dart       # NAS 配置与安全凭据
+│   ├── nas_service.dart     # NAS 浏览、下载缓存与播放解析
+│   ├── nas/                 # WebDAV / SMB 客户端
 │   ├── library_store.dart   # 收藏、歌单、历史、下载记录
 │   ├── settings_store.dart  # 音质、音源开关、播放偏好
 │   └── download_service.dart# 流式下载与本地持久化
 └── ui/
-    ├── screens/             # 发现、搜索、广播、音乐库、设置、播放器、歌单、榜单
+    ├── screens/             # 发现、搜索、广播、音乐库、设置、播放器、歌单、榜单、NAS
     ├── sheets/              # 底部弹层
     └── widgets/             # 设计系统与业务组件
 ```
@@ -146,12 +176,12 @@ adb devices
 adb install -r build/app/outputs/flutter-apk/app-release.apk
 ```
 
-项目提供的 arm64 安装包位于 `dist/MuseFlow-1.0.0-arm64.apk`（约 21 MB，包名 `app.museflow.museflow`，versionName `1.0.0`），使用本机自签名 keystore 完成签名（密钥与密码不纳入版本库），可直接安装；生产发布请替换为自己的正式签名。
+项目提供的 arm64 安装包位于 `dist/MuseFlow-1.0.0-arm64.apk`（约 22 MB，包名 `app.museflow.museflow`，versionName `1.0.0`），使用本机自签名 keystore 完成签名（密钥与密码不纳入版本库），可直接安装；生产发布请替换为自己的正式签名。
 
 ### 平台说明
 
 - **Android / iOS / macOS**：可访问全部第三方音源；首次构建请允许网络权限（项目已配置）。
-- **Web**：浏览器受 CORS 限制，第三方接口可能拒绝跨域请求。Web 构建适合 UI 预览与离线示例曲库体验；完整曲库请使用 App / 桌面端。
+- **Web**：浏览器受 CORS 限制，第三方接口可能拒绝跨域请求。Web 构建适合 UI 预览与离线示例曲库体验；完整曲库请使用 App / 桌面端。NAS 浏览还受目标 WebDAV 的 CORS 配置影响，且 Web 端不提供 NAS 缓存。
 - **离线下载**：仅 App / 桌面端支持，文件保存在应用文档目录 `MuseFlow/Downloads`。
 - **后台播放**：Android 使用 `audio_service` 前台媒体会话，通知栏与锁屏提供上一首 / 播放暂停 / 下一首 / 收藏；iOS 已声明 `audio` 后台模式并接入锁屏控制。
 
@@ -172,6 +202,8 @@ python3 -m http.server 8092
 ![MuseFlow 产品落地页](docs/landing.jpg)
 
 ![MuseFlow 通知栏媒体控制](docs/notification.jpg)
+
+![MuseFlow 本地网络 / NAS](docs/nas.jpg)
 
 ## 测试
 

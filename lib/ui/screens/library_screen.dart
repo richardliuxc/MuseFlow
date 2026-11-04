@@ -6,11 +6,13 @@ import '../../data/demo_catalog.dart';
 import '../../models/song.dart';
 import '../../services/download_service.dart';
 import '../../services/library_store.dart';
+import '../../services/nas_store.dart';
 import '../../services/player_service.dart';
 import '../actions.dart';
 import '../widgets/cards.dart';
 import '../widgets/common.dart';
 import '../widgets/song_tile.dart';
+import 'nas_screen.dart';
 import 'playlist_detail_screen.dart';
 
 class LibraryScreen extends StatefulWidget {
@@ -30,6 +32,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
     final library = context.watch<LibraryStore>();
     final player = context.watch<PlayerService>();
     final downloads = context.watch<DownloadService>();
+    final nas = context.watch<NasStore>();
     final compact = MediaQuery.of(context).size.width < 760;
     final padding = compact ? 20.0 : 36.0;
 
@@ -79,6 +82,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       onPressed: _createPlaylist,
                     ),
                 ],
+              ),
+              const SizedBox(height: 16),
+              _NasLibraryCard(
+                serverCount: nas.servers.length,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const NasScreen()),
+                ),
               ),
               const SizedBox(height: 22),
               _TabBar(
@@ -612,5 +622,67 @@ class _DownloadsTab extends StatelessWidget {
       await downloads.remove(track);
       if (context.mounted) showToast(context, '已删除本地文件');
     }
+  }
+}
+
+
+class _NasLibraryCard extends StatelessWidget {
+  const _NasLibraryCard({required this.serverCount, required this.onTap});
+
+  final int serverCount;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppRadii.md),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppRadii.md),
+          gradient: LinearGradient(
+            colors: [
+              AppColors.cyan.withOpacity(0.08),
+              Colors.white.withOpacity(0.025),
+            ],
+          ),
+          border: Border.all(color: AppColors.cyan.withOpacity(0.16)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: AppColors.cyan.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(Icons.cloud_queue_rounded, size: 19, color: AppColors.cyan),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '本地网络',
+                    style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    serverCount == 0
+                        ? 'WebDAV / SMB · 连接你的 NAS 音乐库'
+                        : 'WebDAV / SMB · 已连接 $serverCount 个服务器',
+                    style: const TextStyle(fontSize: 9.5, color: AppColors.textTertiary),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_rounded, size: 16, color: AppColors.textTertiary),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -8,9 +8,11 @@ import '../../services/download_service.dart';
 import '../../services/library_store.dart';
 import '../../services/music_repository.dart';
 import '../../services/music_source.dart';
+import '../../services/nas_store.dart';
 import '../../services/settings_store.dart';
 import '../actions.dart';
 import '../widgets/common.dart';
+import 'nas_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -20,6 +22,7 @@ class SettingsScreen extends StatelessWidget {
     final settings = context.watch<SettingsStore>();
     final library = context.watch<LibraryStore>();
     final downloads = context.watch<DownloadService>();
+    final nas = context.watch<NasStore>();
     final compact = MediaQuery.of(context).size.width < 760;
 
     return SingleChildScrollView(
@@ -117,6 +120,18 @@ class SettingsScreen extends StatelessWidget {
                 child: Text(
                   '咪咕仅提供搜索与元数据，播放时会自动切换到其它音源。所有接口来自对应平台的公开服务。',
                   style: TextStyle(fontSize: 10, height: 1.6, color: AppColors.textTertiary),
+                ),
+              ),
+              const SizedBox(height: 28),
+              const _SectionLabel('本地网络', 'NAS'),
+              const SizedBox(height: 10),
+              GlassCard(
+                padding: EdgeInsets.zero,
+                child: _NasSettingsTile(
+                  count: nas.servers.length,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(builder: (_) => const NasScreen()),
+                  ),
                 ),
               ),
               const SizedBox(height: 28),
@@ -703,6 +718,46 @@ class _QualitySelector extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+class _NasSettingsTile extends StatelessWidget {
+  const _NasSettingsTile({required this.count, required this.onTap});
+
+  final int count;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppRadii.sm),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        child: Row(
+          children: [
+            const _TileIcon(icon: Icons.cloud_queue_rounded),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('NAS 服务器',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                  const SizedBox(height: 3),
+                  Text(
+                    count == 0 ? '通过 WebDAV 或 SMB 接入本地音乐库' : '已连接 $count 个服务器',
+                    style: const TextStyle(fontSize: 10, color: AppColors.textTertiary),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded, size: 19, color: AppColors.textTertiary),
+          ],
+        ),
       ),
     );
   }
