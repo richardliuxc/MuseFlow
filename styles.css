@@ -603,6 +603,7 @@ body.nav-open .mobile-nav { opacity: 1; transform: none; visibility: visible; }
 .bento-card:hover { transform: translateY(-5px); border-color: rgba(255, 255, 255, 0.16); }
 .bento-card:hover::before { opacity: 1; }
 .span-7 { grid-column: span 7; }
+.span-12 { grid-column: span 12; }
 .span-5 { grid-column: span 5; }
 .span-4 { grid-column: span 4; }
 .bento-copy { position: relative; z-index: 2; margin-top: auto; padding-top: 26px; }
@@ -1111,4 +1112,79 @@ body.nav-open .mobile-nav { opacity: 1; transform: none; visibility: visible; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
   .js .reveal { opacity: 1; transform: none; }
+}
+
+/* ---------- World radio ---------- */
+.radio-bento {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 40px;
+  align-items: center;
+}
+.radio-bento-copy h3 { margin: 10px 0 12px; }
+.radio-bento-copy p { max-width: 460px; }
+.radio-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.radio-genres span {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-tertiary);
+  font-size: 10px;
+}
+.radio-strip {
+  display: grid;
+  gap: 10px;
+}
+.radio-station {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
+}
+.radio-station div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+.radio-station strong {
+  font-size: 12.5px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.radio-station small {
+  font-size: 9.5px;
+  color: var(--text-tertiary);
+}
+.radio-station b {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #071018;
+  font-size: 10px;
+  background: linear-gradient(135deg, var(--cyan), var(--mint));
+}
+.radio-live {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--pink);
+  box-shadow: 0 0 0 4px rgba(244, 114, 182, 0.12);
+}
+@media (max-width: 900px) {
+  .radio-bento { grid-template-columns: 1fr; gap: 26px; }
 }
