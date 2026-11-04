@@ -21,10 +21,11 @@ class MiniPlayer extends StatelessWidget {
     final library = context.watch<LibraryStore>();
     final favorite = library.isFavorite(song);
     final width = MediaQuery.of(context).size.width;
-    final minimal = compact && width < 420;
+    final hideFavorite = compact && width < 420;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(compact ? 12 : 24, 6, compact ? 12 : 24, compact ? 6 : 12),
+      padding: EdgeInsets.fromLTRB(
+          compact ? 12 : 24, 6, compact ? 12 : 24, compact ? 6 : 12),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Material(
@@ -34,7 +35,8 @@ class MiniPlayer extends StatelessWidget {
             child: Stack(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: compact ? 10 : 14, vertical: 9),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: compact ? 10 : 14, vertical: 9),
                   child: Row(
                     children: [
                       Artwork(
@@ -63,6 +65,26 @@ class MiniPlayer extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                                if (song.isRadio) ...[
+                                  const SizedBox(width: 7),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5, vertical: 1),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.pink.withOpacity(0.12),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: const Text(
+                                      'LIVE',
+                                      style: TextStyle(
+                                        fontSize: 7,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: 0.8,
+                                        color: AppColors.pink,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                                 if (player.isPlaying) ...[
                                   const SizedBox(width: 8),
                                   const EqBars(size: 12, color: AppColors.mint),
@@ -92,27 +114,30 @@ class MiniPlayer extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (!minimal)
+                      if (!hideFavorite)
                         IconButton(
                           onPressed: () => toggleFavorite(context, song),
                           icon: Icon(
-                            favorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                            favorite
+                                ? Icons.favorite_rounded
+                                : Icons.favorite_border_rounded,
                             size: 18,
-                            color: favorite ? AppColors.pink : AppColors.textTertiary,
+                            color: favorite
+                                ? AppColors.pink
+                                : AppColors.textTertiary,
                           ),
                           splashRadius: 18,
                           visualDensity: VisualDensity.compact,
                           tooltip: '收藏',
                         ),
-                      if (!minimal)
-                        IconButton(
-                          onPressed: () => player.previous(),
-                          icon: const Icon(Icons.skip_previous_rounded, size: 22),
-                          splashRadius: 18,
-                          color: AppColors.textSecondary,
-                          visualDensity: VisualDensity.compact,
-                          tooltip: '上一首',
-                        ),
+                      IconButton(
+                        onPressed: () => player.previous(),
+                        icon: const Icon(Icons.skip_previous_rounded, size: 22),
+                        splashRadius: 18,
+                        color: AppColors.textSecondary,
+                        visualDensity: VisualDensity.compact,
+                        tooltip: '上一首',
+                      ),
                       _MiniPlayButton(player: player),
                       IconButton(
                         onPressed: () => player.next(),
@@ -125,37 +150,39 @@ class MiniPlayer extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: ValueListenableBuilder<Duration>(
-                    valueListenable: player.position,
-                    builder: (context, position, _) {
-                      return ValueListenableBuilder<Duration>(
-                        valueListenable: player.duration,
-                        builder: (context, duration, __) {
-                          final max = duration.inMilliseconds <= 0
-                              ? 1
-                              : duration.inMilliseconds;
-                          final progress = (position.inMilliseconds / max).clamp(0.0, 1.0);
-                          return Align(
-                            alignment: Alignment.centerLeft,
-                            child: FractionallySizedBox(
-                              widthFactor: progress,
-                              child: Container(
-                                height: 2,
-                                decoration: const BoxDecoration(
-                                  gradient: AppColors.auroraHorizontal,
+                if (!song.isRadio)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: ValueListenableBuilder<Duration>(
+                      valueListenable: player.position,
+                      builder: (context, position, _) {
+                        return ValueListenableBuilder<Duration>(
+                          valueListenable: player.duration,
+                          builder: (context, duration, __) {
+                            final max = duration.inMilliseconds <= 0
+                                ? 1
+                                : duration.inMilliseconds;
+                            final progress =
+                                (position.inMilliseconds / max).clamp(0.0, 1.0);
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: FractionallySizedBox(
+                                widthFactor: progress,
+                                child: Container(
+                                  height: 2,
+                                  decoration: const BoxDecoration(
+                                    gradient: AppColors.auroraHorizontal,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -190,7 +217,9 @@ class _MiniPlayButton extends StatelessWidget {
                 ),
               )
             : Icon(
-                player.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                player.isPlaying
+                    ? Icons.pause_rounded
+                    : Icons.play_arrow_rounded,
                 size: 22,
                 color: const Color(0xFF071018),
               ),

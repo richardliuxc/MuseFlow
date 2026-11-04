@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
@@ -61,7 +60,9 @@ class _SongTileState extends State<SongTile> {
         decoration: BoxDecoration(
           color: _hover
               ? Colors.white.withOpacity(0.045)
-              : (widget.isCurrent ? Colors.white.withOpacity(0.035) : Colors.transparent),
+              : (widget.isCurrent
+                  ? Colors.white.withOpacity(0.035)
+                  : Colors.transparent),
           borderRadius: BorderRadius.circular(AppRadii.sm),
         ),
         child: Material(
@@ -92,7 +93,8 @@ class _SongTileState extends State<SongTile> {
                           Positioned.fill(
                             child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(widget.dense ? 8 : 10),
+                                borderRadius: BorderRadius.circular(
+                                    widget.dense ? 8 : 10),
                                 color: Colors.black.withOpacity(0.35),
                               ),
                               child: Center(
@@ -148,7 +150,20 @@ class _SongTileState extends State<SongTile> {
                       ],
                     ),
                   ),
-                  if (song.durationMs > 0)
+                  if (song.isRadio)
+                    const Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: Text(
+                        'LIVE',
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.8,
+                          color: AppColors.pink,
+                        ),
+                      ),
+                    )
+                  else if (song.durationMs > 0)
                     Padding(
                       padding: const EdgeInsets.only(right: 6),
                       child: Text(

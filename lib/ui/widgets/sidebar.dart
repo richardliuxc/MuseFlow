@@ -64,11 +64,18 @@ class Sidebar extends StatelessWidget {
             onTap: () => onTab(1),
           ),
           _NavItem(
+            icon: Icons.radio_outlined,
+            activeIcon: Icons.radio_rounded,
+            label: '广播',
+            active: tab == 2,
+            onTap: () => onTab(2),
+          ),
+          _NavItem(
             icon: Icons.library_music_outlined,
             activeIcon: Icons.library_music_rounded,
             label: '音乐库',
-            active: tab == 2,
-            onTap: () => onTab(2),
+            active: tab == 3,
+            onTap: () => onTab(3),
           ),
           _NavItem(
             icon: Icons.leaderboard_outlined,
@@ -157,7 +164,7 @@ class Sidebar extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 8, 10, 14),
             child: InkWell(
-              onTap: () => onTab(3),
+              onTap: () => onTab(4),
               borderRadius: BorderRadius.circular(AppRadii.sm),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),

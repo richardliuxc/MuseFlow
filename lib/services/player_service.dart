@@ -22,6 +22,7 @@ class PlayerService extends ChangeNotifier {
         _library = library,
         _audioHandler = audioHandler {
     _audioHandler?.bind(this);
+    _library.addListener(_onLibraryChanged);
     _configure();
   }
 
@@ -57,11 +58,13 @@ class PlayerService extends ChangeNotifier {
 
   List<Song> get queue => List.unmodifiable(_queue);
   int get currentIndex => _index;
-  Song? get current => _index >= 0 && _index < _queue.length ? _queue[_index] : null;
+  Song? get current =>
+      _index >= 0 && _index < _queue.length ? _queue[_index] : null;
   Song? get playbackSong => _stream?.song;
   String? get playbackSource => _stream?.song.source;
   bool get isResolving => _resolving;
-  bool get isBuffering => _resolving || _player.processingState == ProcessingState.loading;
+  bool get isBuffering =>
+      _resolving || _player.processingState == ProcessingState.loading;
   bool get isPlaying => _player.playing;
   bool get hasTrack => current != null;
   String? get error => _error;
@@ -74,8 +77,11 @@ class PlayerService extends ChangeNotifier {
   bool get lyricsLoading => _lyricsLoading;
   bool get isSleepTimerActive => _sleepTimer != null;
   bool get hasNext => _queue.isNotEmpty;
+  bool get isCurrentFavorite =>
+      current != null && _library.isFavorite(current!);
 
-  Stream<ProcessingState> get processingStateStream => _player.processingStateStream;
+  Stream<ProcessingState> get processingStateStream =>
+      _player.processingStateStream;
   ProcessingState get processingState => _player.processingState;
 
   Future<void> _configure() async {
@@ -119,7 +125,8 @@ class PlayerService extends ChangeNotifier {
     } catch (_) {}
   }
 
-  Future<void> playQueue(List<Song> songs, {int startIndex = 0, bool autoPlay = true}) async {
+  Future<void> playQueue(List<Song> songs,
+      {int startIndex = 0, bool autoPlay = true}) async {
     if (songs.isEmpty) return;
     _queue
       ..clear()
@@ -161,8 +168,12 @@ class PlayerService extends ChangeNotifier {
 
     try {
       final localPath = song.extra['file'];
+      final directStream = song.extra['stream'];
       final ResolvedStream stream;
-      if (!kIsWeb && localPath != null && localPath.isNotEmpty) {
+      if (song.isRadio && directStream != null && directStream.isNotEmpty) {
+        stream = ResolvedStream(url: directStream, song: song, note: null);
+        await _player.setAudioSource(AudioSource.uri(Uri.parse(directStream)));
+      } else if (!kIsWeb && localPath != null && localPath.isNotEmpty) {
         stream = ResolvedStream(url: localPath, song: song, note: null);
         await _player.setFilePath(localPath);
       } else {
@@ -194,6 +205,12 @@ class PlayerService extends ChangeNotifier {
   }
 
   Future<void> _loadLyrics(Song song) async {
+    if (song.isRadio) {
+      _lyrics = const [];
+      _lyricsLoading = false;
+      notifyListeners();
+      return;
+    }
     _lyricsLoading = true;
     notifyListeners();
     final lines = await _repository.lyrics(song);
@@ -225,6 +242,17 @@ class PlayerService extends ChangeNotifier {
       position.value = value;
       _audioHandler?.syncPlayback(this);
     } catch (_) {}
+  }
+
+  Future<void> toggleCurrentFavorite() async {
+    final song = current;
+    if (song == null) return;
+    await _library.toggleFavorite(song);
+    notifyListeners();
+  }
+
+  void _onLibraryChanged() {
+    if (!_disposed) notifyListeners();
   }
 
   Future<void> resumeFromNotification() async {
@@ -443,6 +471,7 @@ class PlayerService extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    _library.removeListener(_onLibraryChanged);
     _sleepTimer?.cancel();
     _player.dispose();
     position.dispose();

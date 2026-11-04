@@ -40,20 +40,30 @@ class MuseAudioHandler extends BaseAudioHandler {
   }
 
   @override
+  Future<void> customAction(String name, [Map<String, dynamic>? extras]) async {
+    if (name == 'favorite') {
+      await _player?.toggleCurrentFavorite();
+    }
+  }
+
+  @override
   Future<void> stop() async {
     await _player?.stopFromNotification();
     await super.stop();
   }
 
   void updateNowPlaying(Song song) {
-    final artUri = song.cover.startsWith('http') ? Uri.tryParse(song.cover) : null;
+    final artUri =
+        song.cover.startsWith('http') ? Uri.tryParse(song.cover) : null;
     mediaItem.add(
       MediaItem(
         id: song.uid,
         title: song.name,
         artist: song.artist,
         album: song.album.isEmpty ? null : song.album,
-        duration: song.durationMs > 0 ? Duration(milliseconds: song.durationMs) : null,
+        duration: song.durationMs > 0
+            ? Duration(milliseconds: song.durationMs)
+            : null,
         artUri: artUri,
         extras: const {'source': 'MuseFlow'},
       ),
@@ -87,7 +97,13 @@ class MuseAudioHandler extends BaseAudioHandler {
           MediaControl.skipToPrevious,
           player.isPlaying ? MediaControl.pause : MediaControl.play,
           MediaControl.skipToNext,
-          MediaControl.stop,
+          MediaControl.custom(
+            androidIcon: player.isCurrentFavorite
+                ? 'drawable/ic_favorite'
+                : 'drawable/ic_favorite_border',
+            label: player.isCurrentFavorite ? '取消收藏' : '收藏',
+            name: 'favorite',
+          ),
         ],
         systemActions: const {MediaAction.seek},
         androidCompactActionIndices: const [0, 1, 2],
@@ -102,7 +118,9 @@ class MuseAudioHandler extends BaseAudioHandler {
           RepeatMode.all => AudioServiceRepeatMode.all,
           RepeatMode.one => AudioServiceRepeatMode.one,
         },
-        shuffleMode: player.shuffle ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none,
+        shuffleMode: player.shuffle
+            ? AudioServiceShuffleMode.all
+            : AudioServiceShuffleMode.none,
       ),
     );
   }

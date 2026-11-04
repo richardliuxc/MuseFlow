@@ -9,6 +9,7 @@ import 'services/download_service.dart';
 import 'services/library_store.dart';
 import 'services/music_repository.dart';
 import 'services/player_service.dart';
+import 'services/radio_repository.dart';
 import 'services/settings_store.dart';
 import 'ui/screens/shell.dart';
 import 'ui/screens/splash_screen.dart';
@@ -33,6 +34,7 @@ class _MuseFlowAppState extends State<MuseFlowApp> {
   late final MusicRepository _repository;
   late final PlayerService _player;
   late final DownloadService _downloads;
+  late final RadioRepository _radio;
 
   @override
   void initState() {
@@ -44,6 +46,7 @@ class _MuseFlowAppState extends State<MuseFlowApp> {
       audioHandler: widget.audioHandler,
     );
     _downloads = DownloadService(repository: _repository, library: widget.library);
+    _radio = RadioRepository();
   }
 
   @override
@@ -63,6 +66,7 @@ class _MuseFlowAppState extends State<MuseFlowApp> {
         Provider<MusicRepository>.value(value: _repository),
         ChangeNotifierProvider<PlayerService>.value(value: _player),
         ChangeNotifierProvider<DownloadService>.value(value: _downloads),
+        Provider<RadioRepository>.value(value: _radio),
       ],
       child: MaterialApp(
         title: 'MuseFlow · 沐声',

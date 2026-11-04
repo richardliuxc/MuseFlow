@@ -6,22 +6,27 @@ import 'package:provider/provider.dart';
 import '../../core/theme.dart';
 import '../../core/utils.dart';
 import '../../data/demo_catalog.dart';
+import '../../models/radio_station.dart';
 import '../../models/song.dart';
 import '../../services/library_store.dart';
 import '../../services/music_repository.dart';
 import '../../services/player_service.dart';
+import '../../services/radio_repository.dart';
 import '../actions.dart';
 import '../widgets/artwork.dart';
 import '../widgets/cards.dart';
 import '../widgets/common.dart';
+import '../widgets/radio_cards.dart';
 import '../widgets/song_tile.dart';
 import 'charts_screen.dart';
 import 'playlist_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.onOpenSearch});
+  const HomeScreen(
+      {super.key, required this.onOpenSearch, required this.onOpenRadio});
 
   final VoidCallback onOpenSearch;
+  final VoidCallback onOpenRadio;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -30,6 +35,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final Future<List<Song>> _dailyFuture;
   late final Future<List<Song>> _trendingFuture;
+  late final Future<List<RadioStation>> _radioFuture;
 
   @override
   void initState() {
@@ -37,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final repository = context.read<MusicRepository>();
     _dailyFuture = repository.dailyMix();
     _trendingFuture = repository.chartSongs('hot');
+    _radioFuture = context.read<RadioRepository>().featured();
   }
 
   void _openPlaylist(Playlist playlist) {
@@ -55,6 +62,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _playRadio(List<RadioStation> list, RadioStation station) {
+    final songs = list.map((item) => item.toSong()).toList();
+    final index = list.indexOf(station);
+    context
+        .read<PlayerService>()
+        .playQueue(songs, startIndex: index < 0 ? 0 : index);
+  }
+
   void _playPlaylist(Playlist playlist) {
     if (playlist.songs.isEmpty) return;
     context.read<PlayerService>().playQueue(playlist.songs);
@@ -62,7 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final history = context.watch<LibraryStore>().history;
+    final library = context.watch<LibraryStore>();
+    final history = library.history;
     final player = context.watch<PlayerService>();
 
     return LayoutBuilder(builder: (context, constraints) {
@@ -123,6 +139,62 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
+                  ),
+                  const SizedBox(height: 34),
+                  FutureBuilder<List<RadioStation>>(
+                    future: _radioFuture,
+                    builder: (context, snapshot) {
+                      final featured = (snapshot.data ?? const <RadioStation>[])
+                          .take(6)
+                          .toList();
+                      if (featured.isEmpty) return const SizedBox.shrink();
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SectionHeader(
+                            title: '世界广播',
+                            subtitle: '来自 190+ 个国家 · 24 小时实时直播',
+                            action: '全部电台',
+                            onAction: widget.onOpenRadio,
+                          ),
+                          const SizedBox(height: 14),
+                          SizedBox(
+                            height: 100,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: featured.length,
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(width: 10),
+                              itemBuilder: (context, index) {
+                                final station = featured[index];
+                                final song = station.toSong();
+                                return SizedBox(
+                                  width: compact ? 284 : 310,
+                                  child: RadioStationCard(
+                                    station: station,
+                                    dense: true,
+                                    favorite: library.isFavorite(song),
+                                    onPlay: () => _playRadio(featured, station),
+                                    onFavorite: () async {
+                                      await library.toggleFavorite(song);
+                                      if (context.mounted) {
+                                        showToast(
+                                          context,
+                                          library.isFavorite(song)
+                                              ? '已收藏电台'
+                                              : '已取消收藏',
+                                        );
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: 34),
                   _DailySection(

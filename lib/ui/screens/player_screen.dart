@@ -467,12 +467,19 @@ class _TrackMeta extends StatelessWidget {
               icon: Icons.album_outlined,
               label: song.album.isEmpty ? 'MuseFlow' : song.album,
             ),
-            _MetaPill(
-              icon: Icons.graphic_eq_rounded,
-              label: settings.quality.shortLabel,
-              color: AppColors.mint,
-              onTap: () => openQualitySheet(context),
-            ),
+            if (song.isRadio)
+              const _MetaPill(
+                icon: Icons.podcasts_rounded,
+                label: 'LIVE 直播',
+                color: AppColors.pink,
+              )
+            else
+              _MetaPill(
+                icon: Icons.graphic_eq_rounded,
+                label: settings.quality.shortLabel,
+                color: AppColors.mint,
+                onTap: () => openQualitySheet(context),
+              ),
             if (actualSource != null && actualSource != song.source)
               _MetaPill(
                 icon: Icons.swap_horiz_rounded,
@@ -618,7 +625,11 @@ class _LyricsPanelState extends State<_LyricsPanel> {
       return _LyricsPlaceholder(compact: widget.compact, loading: true);
     }
     if (lines.isEmpty) {
-      return _LyricsPlaceholder(compact: widget.compact, loading: false);
+      return _LyricsPlaceholder(
+        compact: widget.compact,
+        loading: false,
+        live: player.current?.isRadio ?? false,
+      );
     }
 
     return Container(
@@ -749,10 +760,15 @@ class _LyricsPanelState extends State<_LyricsPanel> {
 }
 
 class _LyricsPlaceholder extends StatelessWidget {
-  const _LyricsPlaceholder({required this.compact, required this.loading});
+  const _LyricsPlaceholder({
+    required this.compact,
+    required this.loading,
+    this.live = false,
+  });
 
   final bool compact;
   final bool loading;
+  final bool live;
 
   @override
   Widget build(BuildContext context) {
@@ -778,9 +794,9 @@ class _LyricsPlaceholder extends StatelessWidget {
                     color: AppColors.textTertiary,
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    '暂无歌词，享受旋律',
-                    style: TextStyle(fontSize: 12, color: AppColors.textTertiary),
+                  Text(
+                    live ? '正在直播 · 享受此刻' : '暂无歌词，享受旋律',
+                    style: const TextStyle(fontSize: 12, color: AppColors.textTertiary),
                   ),
                 ],
               ),
@@ -958,6 +974,49 @@ class _SeekBarState extends State<_SeekBar> {
 
   @override
   Widget build(BuildContext context) {
+    final song = widget.player.current;
+    if (song != null && song.isRadio) {
+      return ValueListenableBuilder<Duration>(
+        valueListenable: widget.player.position,
+        builder: (context, position, _) {
+          return SizedBox(
+            height: 54,
+            child: Row(
+              children: [
+                Container(
+                  width: 7,
+                  height: 7,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.pink,
+                    boxShadow: [BoxShadow(color: Color(0x66F472B6), blurRadius: 8)],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'LIVE · 正在直播',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1,
+                    color: AppColors.pink,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  formatMs(position.inMilliseconds),
+                  style: const TextStyle(
+                    fontSize: 10.5,
+                    color: AppColors.textTertiary,
+                    fontFeatures: [ui.FontFeature.tabularFigures()],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
     return ValueListenableBuilder<Duration>(
       valueListenable: widget.player.position,
       builder: (context, position, _) {
@@ -1070,6 +1129,19 @@ class _DownloadAction extends StatelessWidget {
     final downloads = context.watch<DownloadService>();
     final song = player.current;
     if (song == null) return const SizedBox.shrink();
+    if (song.isRadio) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.podcasts_rounded, size: 14, color: AppColors.textTertiary),
+            SizedBox(width: 5),
+            Text('直播', style: TextStyle(fontSize: 10.5, color: AppColors.textTertiary)),
+          ],
+        ),
+      );
+    }
     final isLoading = downloads.isDownloading(song);
     final done = downloads.isDownloaded(song);
     return TextButton.icon(

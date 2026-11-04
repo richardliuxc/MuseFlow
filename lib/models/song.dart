@@ -31,6 +31,8 @@ class Song {
 
   bool get isDemo => source == 'demo';
 
+  bool get isRadio => source == 'radio' || extra['radio'] == '1';
+
   String? get assetPath => extra['asset'];
 
   String get sourceLabel => switch (source) {
@@ -40,6 +42,7 @@ class Song {
         'qq' => 'QQ 音乐',
         'migu' => '咪咕',
         'demo' => 'MuseFlow',
+        'radio' => '广播',
         _ => source,
       };
 
@@ -50,6 +53,7 @@ class Song {
         'qq' => const Color(0xFF31C27C),
         'migu' => const Color(0xFFE6006F),
         'demo' => AppColors.violet,
+        'radio' => const Color(0xFFF59E0B),
         _ => AppColors.cyan,
       };
 

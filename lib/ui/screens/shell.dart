@@ -17,6 +17,7 @@ import 'charts_screen.dart';
 import 'home_screen.dart';
 import 'library_screen.dart';
 import 'playlist_detail_screen.dart';
+import 'radio_screen.dart';
 import 'search_screen.dart';
 import 'settings_screen.dart';
 
@@ -66,14 +67,15 @@ class _AppShellState extends State<AppShell> {
           await library.toggleFavorite(demoTracks[i]);
         }
       }
-      if (mounted) setState(() => _tab = 2);
+      if (mounted) setState(() => _tab = 3);
       return;
     }
     if (preview == 'playlist') {
       if (!mounted) return;
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) => PlaylistDetailScreen(playlist: editorialPlaylists.first),
+          builder: (_) =>
+              PlaylistDetailScreen(playlist: editorialPlaylists.first),
         ),
       );
       return;
@@ -85,6 +87,10 @@ class _AppShellState extends State<AppShell> {
           builder: (_) => ChartsScreen(initialChart: demoCharts.first),
         ),
       );
+      return;
+    }
+    if (preview == 'radio') {
+      setState(() => _tab = 2);
       return;
     }
     if (preview == 'player') {
@@ -127,8 +133,9 @@ class _AppShellState extends State<AppShell> {
     final showRail = width >= 1280;
 
     final screens = <Widget>[
-      HomeScreen(onOpenSearch: () => _setTab(1)),
+      HomeScreen(onOpenSearch: () => _setTab(1), onOpenRadio: () => _setTab(2)),
       const SearchScreen(),
+      const RadioScreen(),
       LibraryScreen(onOpenSearch: () => _setTab(0)),
       const SettingsScreen(),
     ];
@@ -141,7 +148,8 @@ class _AppShellState extends State<AppShell> {
           child: compact
               ? Column(
                   children: [
-                    Expanded(child: IndexedStack(index: _tab, children: screens)),
+                    Expanded(
+                        child: IndexedStack(index: _tab, children: screens)),
                     if (player.hasTrack) const MiniPlayer(compact: true),
                     _MobileNav(tab: _tab, onTab: _setTab),
                   ],
@@ -154,7 +162,7 @@ class _AppShellState extends State<AppShell> {
                         children: [
                           _DesktopTopBar(
                             onSearch: () => _setTab(1),
-                            onProfile: () => _setTab(3),
+                            onProfile: () => _setTab(4),
                             quality: settings.quality.shortLabel,
                           ),
                           Expanded(
@@ -206,11 +214,13 @@ class _DesktopTopBar extends StatelessWidget {
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.search_rounded, size: 16, color: AppColors.textTertiary),
+                  Icon(Icons.search_rounded,
+                      size: 16, color: AppColors.textTertiary),
                   SizedBox(width: 9),
                   Text(
                     '搜索音乐、歌手或专辑',
-                    style: TextStyle(fontSize: 11.5, color: AppColors.textTertiary),
+                    style: TextStyle(
+                        fontSize: 11.5, color: AppColors.textTertiary),
                   ),
                 ],
               ),
@@ -226,7 +236,8 @@ class _DesktopTopBar extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Icon(Icons.graphic_eq_rounded, size: 11, color: AppColors.mint),
+                const Icon(Icons.graphic_eq_rounded,
+                    size: 11, color: AppColors.mint),
                 const SizedBox(width: 5),
                 Text(
                   quality,
@@ -248,7 +259,9 @@ class _DesktopTopBar extends StatelessWidget {
             tooltip: '通知',
             onTap: () => showToast(
               context,
-              history.isEmpty ? '还没有播放记录，去发现页听一首吧' : '最近听过：${history.first.name}',
+              history.isEmpty
+                  ? '还没有播放记录，去发现页听一首吧'
+                  : '最近听过：${history.first.name}',
             ),
           ),
           const SizedBox(width: 6),
@@ -260,7 +273,8 @@ class _DesktopTopBar extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: AppColors.aurora,
-                border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.5),
+                border: Border.all(
+                    color: Colors.white.withOpacity(0.2), width: 1.5),
               ),
               child: const Center(
                 child: Text(
@@ -292,6 +306,7 @@ class _MobileNav extends StatelessWidget {
     const items = [
       (Icons.explore_outlined, Icons.explore_rounded, '发现'),
       (Icons.search_rounded, Icons.search_rounded, '搜索'),
+      (Icons.radio_outlined, Icons.radio_rounded, '广播'),
       (Icons.library_music_outlined, Icons.library_music_rounded, '音乐库'),
       (Icons.person_outline_rounded, Icons.person_rounded, '我的'),
     ];
@@ -318,15 +333,20 @@ class _MobileNav extends StatelessWidget {
                         children: [
                           AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 3),
                             decoration: BoxDecoration(
-                              color: tab == i ? Colors.white.withOpacity(0.08) : Colors.transparent,
+                              color: tab == i
+                                  ? Colors.white.withOpacity(0.08)
+                                  : Colors.transparent,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
                               tab == i ? items[i].$2 : items[i].$1,
                               size: 21,
-                              color: tab == i ? AppColors.mint : AppColors.textTertiary,
+                              color: tab == i
+                                  ? AppColors.mint
+                                  : AppColors.textTertiary,
                             ),
                           ),
                           const SizedBox(height: 3),
@@ -334,8 +354,11 @@ class _MobileNav extends StatelessWidget {
                             items[i].$3,
                             style: TextStyle(
                               fontSize: 8.5,
-                              fontWeight: tab == i ? FontWeight.w600 : FontWeight.w400,
-                              color: tab == i ? AppColors.textPrimary : AppColors.textTertiary,
+                              fontWeight:
+                                  tab == i ? FontWeight.w600 : FontWeight.w400,
+                              color: tab == i
+                                  ? AppColors.textPrimary
+                                  : AppColors.textTertiary,
                             ),
                           ),
                         ],
