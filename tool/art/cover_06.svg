@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#1A0E05"/><stop offset="0.55" stop-color="#4A2A10"/><stop offset="1" stop-color="#1A0E05"/>
+  </linearGradient>
+  <radialGradient id="orb" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#FBBF24" stop-opacity="0.85"/>
+    <stop offset="0.55" stop-color="#FB7185" stop-opacity="0.28"/>
+    <stop offset="1" stop-color="#FB7185" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="vig" cx="0.5" cy="0.42" r="0.75">
+    <stop offset="0" stop-color="#000" stop-opacity="0"/>
+    <stop offset="1" stop-color="#000" stop-opacity="0.62"/>
+  </radialGradient>
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer><feFuncA type="linear" slope="0.08"/></feComponentTransfer>
+  </filter>
+  <filter id="soft"><feGaussianBlur stdDeviation="70"/></filter>
+</defs>
+<rect width="800" height="800" fill="url(#bg)"/>
+<ellipse cx="220" cy="180" rx="300" ry="240" fill="#FBBF24" opacity="0.16" filter="url(#soft)"/>
+<ellipse cx="660" cy="620" rx="300" ry="260" fill="#FB7185" opacity="0.14" filter="url(#soft)"/>
+
+  <g>
+    <circle cx="400" cy="330" r="190" fill="none" stroke="#FBBF24" stroke-opacity="0.55" stroke-width="1.6"/>
+    <circle cx="400" cy="330" r="240" fill="none" stroke="#FB7185" stroke-opacity="0.3" stroke-width="1.2"/>
+    <circle cx="400" cy="330" r="300" fill="none" stroke="#FBBF24" stroke-opacity="0.16" stroke-width="1.2"/>
+    <circle cx="400" cy="330" r="120" fill="url(#orb)" opacity="0.65"/>
+    <path d="M 60 760 L 400 330 L 740 760 Z" fill="none" stroke="#FBBF24" stroke-opacity="0.12"/>
+    <circle cx="498" cy="332" r="1.2" fill="#FB7185" opacity="0.7"/><circle cx="498" cy="463" r="2.2" fill="#FB7185" opacity="0.6"/><circle cx="498" cy="594" r="3.2" fill="#FB7185" opacity="0.49999999999999994"/><circle cx="498" cy="295" r="1.2" fill="#FB7185" opacity="0.3999999999999999"/><circle cx="498" cy="426" r="2.2" fill="#FB7185" opacity="0.29999999999999993"/><circle cx="498" cy="557" r="3.2" fill="#FB7185" opacity="0.19999999999999996"/><circle cx="498" cy="258" r="1.2" fill="#FB7185" opacity="0.09999999999999987"/><circle cx="498" cy="389" r="2.2" fill="#FB7185" opacity="-1.1102230246251565e-16"/><circle cx="498" cy="520" r="3.2" fill="#FB7185" opacity="-0.10000000000000009"/>
+  </g>
+<rect width="800" height="800" fill="url(#vig)"/>
+<rect width="800" height="800" filter="url(#grain)" opacity="0.5"/>
+<rect x="1" y="1" width="798" height="798" fill="none" stroke="white" stroke-opacity="0.08"/>
+<g font-family="Inter, Helvetica Neue, Arial" fill="white">
+  <text x="54" y="70" font-size="15" letter-spacing="6" opacity="0.62">MUSEFLOW SESSIONS</text>
+  <text x="746" y="70" font-size="15" letter-spacing="2" text-anchor="end" opacity="0.45">NO. 06</text>
+  <text x="54" y="650" font-family="InterDisplay, Helvetica Neue, Arial" font-weight="700"
+        font-size="74" letter-spacing="-2">Slow Planet</text>
+  <text x="56" y="700" font-size="22" letter-spacing="5" opacity="0.72">LUMA</text>
+  <text x="56" y="746" font-size="17" letter-spacing="3" opacity="0.4">Lo-Fi · 慢速星球</text>
+</g>
+<g transform="translate(746 730)" opacity="0.6">
+  <circle r="3" fill="#FBBF24"/><circle r="9" fill="none" stroke="#FBBF24" stroke-opacity="0.5"/>
+</g>
+</svg>

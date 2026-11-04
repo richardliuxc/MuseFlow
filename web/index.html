@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="MuseFlow 沐声 — 多平台聚合音乐播放器，让声音自然流动。">
+  <meta name="theme-color" content="#06070D">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MuseFlow">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <title>MuseFlow · 沐声</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    html, body { margin: 0; padding: 0; background: #06070D; color: #F4F5FC; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; }
+    #mf-splash { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at 30% 20%, #1E1640 0%, #06070D 60%); z-index: 9999; transition: opacity .5s ease; }
+    #mf-splash.hide { opacity: 0; pointer-events: none; }
+    #mf-splash img { width: 88px; height: 88px; border-radius: 24px; box-shadow: 0 18px 60px rgba(124, 92, 255, .45); animation: mf-float 3s ease-in-out infinite; }
+    #mf-splash .name { margin-top: 22px; font-size: 28px; font-weight: 700; letter-spacing: -.8px; }
+    #mf-splash .tag { margin-top: 8px; font-size: 9px; letter-spacing: 4px; color: #7B82A0; }
+    #mf-splash .bar { margin-top: 34px; width: 120px; height: 2px; border-radius: 2px; background: rgba(255,255,255,.08); overflow: hidden; }
+    #mf-splash .bar span { display: block; width: 40%; height: 100%; border-radius: 2px; background: linear-gradient(90deg, #A78BFA, #22D3EE, #34D399); animation: mf-slide 1.2s ease-in-out infinite; }
+    @keyframes mf-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    @keyframes mf-slide { 0% { transform: translateX(-120%); } 100% { transform: translateX(320%); } }
+  </style>
+  <script>
+    const serviceWorkerVersion = null;
+  </script>
+  <script src="flutter.js" defer></script>
+</head>
+<body>
+  <div id="mf-splash">
+    <img src="icons/Icon-192.png" alt="MuseFlow">
+    <div class="name">MuseFlow</div>
+    <div class="tag">沐声 · EVERY SOUND, YOUR FLOW</div>
+    <div class="bar"><span></span></div>
+  </div>
+  <script>
+    window.addEventListener('load', function () {
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: { serviceWorkerVersion: serviceWorkerVersion },
+        onEntrypointLoaded: function (engineInitializer) {
+          engineInitializer.initializeEngine().then(function (appRunner) {
+            appRunner.runApp();
+            setTimeout(function () {
+              const splash = document.getElementById('mf-splash');
+              if (splash) {
+                splash.classList.add('hide');
+                setTimeout(function () { splash.remove(); }, 550);
+              }
+            }, 350);
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
