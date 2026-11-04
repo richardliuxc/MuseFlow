@@ -5,7 +5,7 @@
 <h1 align="center">MuseFlow · 沐声</h1>
 
 <p align="center">
-  多平台聚合音乐播放器 · 商业级 Flutter UI · 让声音自然流动
+  多平台聚合音乐播放器 · 让声音自然流动
 </p>
 
 <p align="center">
@@ -137,7 +137,7 @@ adb install -r build/app/outputs/flutter-apk/app-release.apk
 
 ## 产品落地页
 
-在线访问：**https://richardliuxc.github.io/MuseFlow/**（由 GitHub Actions 自动部署 `landing/`）
+在线访问：https://richardliuxc.github.io/MuseFlow/（由 GitHub Actions 自动部署 `landing/`）
 
 `landing/` 下是可直接部署的静态产品官网，包含 Hero 手机预览、功能 Bento、界面截图切换、音源介绍、APK 下载与响应式移动菜单。
 
