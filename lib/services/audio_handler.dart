@@ -101,6 +101,7 @@ class MuseAudioHandler extends BaseAudioHandler {
         controls: [
           MediaControl.skipToPrevious,
           player.isPlaying ? MediaControl.pause : MediaControl.play,
+          MediaControl.skipToNext,
           MediaControl(
             androidIcon: player.isCurrentFavorite
                 ? 'drawable/ic_favorite'
@@ -108,7 +109,6 @@ class MuseAudioHandler extends BaseAudioHandler {
             label: player.isCurrentFavorite ? '取消收藏' : '收藏',
             action: MediaAction.fastForward,
           ),
-          MediaControl.skipToNext,
         ],
         systemActions: const {MediaAction.seek},
         androidCompactActionIndices: const [0, 1, 2],
