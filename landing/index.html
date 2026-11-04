@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>MuseFlow 沐声 · 让声音自然流动</title>
+  <meta name="description" content="MuseFlow 沐声，一款把五个音乐平台装进同一张界面的播放器。聚合搜索、自动换源、逐行歌词、队列、收藏与离线下载，一次到位。">
+  <meta name="theme-color" content="#06070D">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MuseFlow 沐声 · 让声音自然流动">
+  <meta property="og:description" content="五个音乐平台，一个播放界面。多平台聚合搜索、自动换源、逐行歌词与离线下载。">
+  <meta property="og:image" content="assets/shots/home-desktop.jpg">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/app-icon-256.png">
+  <script>document.documentElement.classList.add("js");</script>
+  <noscript><style>.js .reveal{opacity:1!important;transform:none!important}</style></noscript>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="site-header" id="top" data-header>
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="MuseFlow 首页">
+        <span class="brand-mark"><img src="assets/app-icon-256.png" alt="" width="256" height="256"></span>
+        <span class="brand-type">
+          <strong>MuseFlow</strong>
+          <small>沐声 · MUSIC IN FLOW</small>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="主导航">
+        <a href="#features">功能</a>
+        <a href="#screens">界面</a>
+        <a href="#sources">音源</a>
+        <a href="#download">下载</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="icon-link" href="https://github.com/richardliuxc/MuseFlow" target="_blank" rel="noopener" aria-label="在 GitHub 查看 MuseFlow">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.75 2.69 1.25 3.35.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.18-1.49 3.14-1.18 3.14-1.18.63 1.59.24 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.41-2.69 5.39-5.25 5.67.41.35.77 1.05.77 2.12 0 1.53-.01 2.76-.01 3.14 0 .3.2.66.8.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+        </a>
+        <a class="btn btn-primary btn-sm" href="#download">下载 App</a>
+        <button class="menu-btn" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobileNav">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav" aria-hidden="true">
+      <nav aria-label="移动端导航">
+        <a href="#features">功能 <span>01</span></a>
+        <a href="#screens">界面 <span>02</span></a>
+        <a href="#sources">音源 <span>03</span></a>
+        <a href="#download">下载 <span>04</span></a>
+      </nav>
+      <div class="mobile-nav-foot">
+        <a href="https://github.com/richardliuxc/MuseFlow" target="_blank" rel="noopener">GitHub ↗</a>
+        <a href="downloads/MuseFlow-1.0.0-arm64.apk" download>下载 APK</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-aura" aria-hidden="true">
+        <span class="aura aura-violet" data-parallax="0.02"></span>
+        <span class="aura aura-cyan" data-parallax="-0.015"></span>
+        <span class="aura aura-mint" data-parallax="0.01"></span>
+      </div>
+      <div class="hero-grid-lines" aria-hidden="true"></div>
+
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <span class="eyebrow reveal"><i class="status-dot"></i> MuseFlow 1.0 · Aurora Edition</span>
+          <h1 id="hero-title" class="reveal" data-delay="60">让声音，<br><span class="gradient-text">自然流动。</span></h1>
+          <p class="hero-lede reveal" data-delay="120">
+            MuseFlow 沐声，把五个音乐平台装进同一张界面。<br class="desktop-only">
+            一次搜索，统一试听、歌词、收藏与下载。
+          </p>
+
+          <div class="hero-cta reveal" data-delay="180">
+            <a class="btn btn-primary" href="#download">
+              下载 Android 版
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="btn btn-ghost" href="#screens">看看界面</a>
+          </div>
+
+          <div class="hero-meta reveal" data-delay="240">
+            <span>Android 5.0+</span><i></i><span>arm64</span><i></i><span>21 MB</span><i></i><span>免登录体验</span>
+          </div>
+
+          <div class="hero-platforms reveal" data-delay="300">
+            <div class="platform-dots" aria-hidden="true">
+              <span style="--c:#EC4141">网</span>
+              <span style="--c:#FFB800">酷</span>
+              <span style="--c:#2CA2F9">狗</span>
+              <span style="--c:#31C27C">Q</span>
+              <span style="--c:#E6006F">咪</span>
+            </div>
+            <p>网易云 · 酷我 · 酷狗 · QQ 音乐 · 咪咕</p>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal" data-delay="160" aria-label="MuseFlow 手机端预览">
+          <div class="phone-stage">
+            <div class="phone-halo" aria-hidden="true"></div>
+            <div class="phone-shell">
+              <div class="phone-speaker" aria-hidden="true"></div>
+              <div class="phone-screen">
+                <img src="assets/shots/home-mobile.jpg" alt="MuseFlow 手机端首页，极光渐变与每日推荐" width="780" height="1688" fetchpriority="high">
+              </div>
+            </div>
+
+            <div class="float-card float-now" aria-hidden="true">
+              <img class="float-cover" src="assets/shots/cover-01.jpg" alt="" width="96" height="96">
+              <div class="float-info">
+                <strong>潮汐</strong>
+                <span>LUMA · Aurora Sessions</span>
+                <div class="float-progress"><i></i></div>
+              </div>
+              <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+            </div>
+
+            <div class="float-card float-sources" aria-hidden="true">
+              <div class="float-sources-head"><span class="pulse"></span> 5 个音源已连接</div>
+              <div class="mini-platforms">
+                <b style="--c:#EC4141">网易云</b><b style="--c:#FFB800">酷我</b><b style="--c:#2CA2F9">酷狗</b><b style="--c:#31C27C">QQ</b>
+              </div>
+            </div>
+
+            <div class="float-card float-lyric" aria-hidden="true">
+              <span class="tiny-label">正在播放</span>
+              <p>“让声音，替你抵达远方。”</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker-track">
+          <span>多平台聚合</span><i></i><span>自动换源</span><i></i><span>逐行歌词</span><i></i><span>队列与循环</span><i></i><span>离线下载</span><i></i><span>睡眠定时</span><i></i>
+          <span>多平台聚合</span><i></i><span>自动换源</span><i></i><span>逐行歌词</span><i></i><span>队列与循环</span><i></i><span>离线下载</span><i></i><span>睡眠定时</span><i></i>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats container" aria-label="MuseFlow 数据">
+      <div class="stat reveal"><strong>5<em>+</em></strong><span>个音乐平台</span><small>一次搜索，统一结果</small></div>
+      <div class="stat reveal" data-delay="80"><strong>1<em>次</em></strong><span>输入，全网检索</span><small>不用来回切换 App</small></div>
+      <div class="stat reveal" data-delay="160"><strong>8<em>首</em></strong><span>原创示例曲</span><small>无网络也能完整体验</small></div>
+      <div class="stat reveal" data-delay="240"><strong>0<em>广告</em></strong><span>只专注于聆听</span><small>没有开屏与信息流</small></div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow">FEATURES</span>
+          <h2>不只是播放器，<br>是一整套聆听方式。</h2>
+          <p>从搜索到播放，从歌词到下载，每个细节都为“少一步操作”而设计。</p>
+        </header>
+
+        <div class="bento">
+          <article class="bento-card span-7 reveal">
+            <div class="feature-visual search-visual" aria-hidden="true">
+              <div class="fake-search">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <span>晴天</span>
+                <kbd>↵</kbd>
+              </div>
+              <div class="search-results">
+                <div class="search-row"><img src="assets/shots/cover-04.jpg" alt="" loading="lazy"><div><strong>晴天</strong><span>周杰伦 · 叶惠美</span></div><b class="tag tag-red">网易云</b><time>4:29</time></div>
+                <div class="search-row"><img src="assets/shots/cover-02.jpg" alt="" loading="lazy"><div><strong>晴天</strong><span>周杰伦 · 叶惠美</span></div><b class="tag tag-amber">酷我</b><time>4:29</time></div>
+                <div class="search-row"><img src="assets/shots/cover-01.jpg" alt="" loading="lazy"><div><strong>晴天</strong><span>周杰伦 · 叶惠美</span></div><b class="tag tag-blue">酷狗</b><time>4:29</time></div>
+              </div>
+            </div>
+            <div class="bento-copy">
+              <span class="card-index">01 / SEARCH</span>
+              <h3>一个搜索框，五个平台</h3>
+              <p>网易云、酷我、酷狗、QQ 音乐、咪咕并行检索。结果按音源标注，想听哪个版本，由你决定。</p>
+            </div>
+          </article>
+
+          <article class="bento-card span-5 reveal" data-delay="80">
+            <div class="feature-visual switch-visual" aria-hidden="true">
+              <div class="switch-node is-off"><span>网易云</span><small>版权受限</small></div>
+              <div class="switch-arrow"><i></i><svg viewBox="0 0 24 24"><path d="M5 12h13M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="switch-node is-on"><span>酷我</span><small>已自动切换</small></div>
+            </div>
+            <div class="bento-copy">
+              <span class="card-index">02 / SWITCH</span>
+              <h3>播放失败，自动换源</h3>
+              <p>遇到会员或版权限制时，按歌名、歌手与时长匹配其它平台的可播放版本，不打断这一首。</p>
+            </div>
+          </article>
+
+          <article class="bento-card span-4 reveal">
+            <div class="feature-visual lyric-visual" aria-hidden="true">
+              <div class="lyric-card">
+                <span class="lyric-label">LYRICS · 歌词</span>
+                <p class="lyric-dim">海面把月光揉成一片银</p>
+                <p class="lyric-active">风从很远的地方赶来</p>
+                <p class="lyric-dim">我们站在退潮之后的岸边</p>
+              </div>
+            </div>
+            <div class="bento-copy">
+              <span class="card-index">03 / LYRICS</span>
+              <h3>歌词，跟着声音走</h3>
+              <p>逐行高亮、翻译合并，点击任意一句即可跳转。让歌词成为画面，而不只是文字。</p>
+            </div>
+          </article>
+
+          <article class="bento-card span-4 reveal" data-delay="80">
+            <div class="feature-visual queue-visual" aria-hidden="true">
+              <div class="queue-head"><span>播放队列</span><b>8 首</b></div>
+              <div class="queue-row is-current"><span class="q-eq"><i></i><i></i><i></i></span><div><strong>潮汐</strong><small>LUMA</small></div><time>0:45</time></div>
+              <div class="queue-row"><span>02</span><div><strong>夜航</strong><small>ASTER</small></div><time>0:41</time></div>
+              <div class="queue-row"><span>03</span><div><strong>玻璃海</strong><small>NOVA</small></div><time>0:43</time></div>
+            </div>
+            <div class="bento-copy">
+              <span class="card-index">04 / QUEUE</span>
+              <h3>队列、随机与循环</h3>
+              <p>随手加入下一首，拖动进度，切换列表循环或单曲循环，播放节奏始终在你手里。</p>
+            </div>
+          </article>
+
+          <article class="bento-card span-4 reveal" data-delay="160">
+            <div class="feature-visual library-visual" aria-hidden="true">
+              <div class="library-card">
+                <div class="library-cover"><img src="assets/shots/cover-04.jpg" alt="" loading="lazy"><span>夜色收藏</span></div>
+                <div class="library-meta"><strong>8 首 · 5 分钟</strong><small>本地歌单 · 随时编辑</small></div>
+              </div>
+              <div class="mini-stats"><span><b>12</b>喜欢</span><span><b>3</b>歌单</span><span><b>5</b>最近</span></div>
+            </div>
+            <div class="bento-copy">
+              <span class="card-index">05 / LIBRARY</span>
+              <h3>你的音乐库，只属于你</h3>
+              <p>收藏、自建歌单、最近播放与下载记录全部保存在本机，不需要账号，也不上传云端。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section screens-section" id="screens">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow">INTERFACE</span>
+          <h2>为耳朵做的界面，<br>也为眼睛。</h2>
+          <p>Aurora Noir 视觉语言：近黑舞台、玻璃质感与一道贯穿始终的极光。</p>
+        </header>
+
+        <div class="shot-switcher reveal" data-delay="80">
+          <div class="shot-tabs" role="tablist" aria-label="界面预览">
+            <button class="shot-tab is-active" type="button" role="tab" aria-selected="true" data-shot="home">发现</button>
+            <button class="shot-tab" type="button" role="tab" aria-selected="false" data-shot="player">播放器</button>
+            <button class="shot-tab" type="button" role="tab" aria-selected="false" data-shot="search">搜索</button>
+            <button class="shot-tab" type="button" role="tab" aria-selected="false" data-shot="library">音乐库</button>
+          </div>
+
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <span class="browser-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="browser-url"><span class="lock"></span> museflow.app / <b id="shotPath">discover</b></div>
+              <span class="browser-badge">LIVE PREVIEW</span>
+            </div>
+            <div class="browser-screen">
+              <img id="desktopShot" src="assets/shots/home-desktop.jpg" alt="MuseFlow 桌面端发现页" width="1440" height="900">
+            </div>
+          </div>
+        </div>
+
+        <div class="mobile-showcase">
+          <figure class="phone-figure reveal">
+            <div class="mini-phone"><img src="assets/shots/home-mobile.jpg" alt="手机端发现页" loading="lazy" width="780" height="1688"></div>
+            <figcaption><span>01</span>发现 · 每日推荐</figcaption>
+          </figure>
+          <div class="mobile-copy reveal" data-delay="80">
+            <span class="eyebrow">MADE FOR MOBILE</span>
+            <h3>单手就能完成<br>一次完整的聆听。</h3>
+            <p>底部导航、迷你播放器、全屏播放页，一切都在拇指能够到的地方。横屏、平板与大屏也会自动切换布局。</p>
+            <ul class="check-list">
+              <li>自适应手机、平板与桌面</li>
+              <li>后台持续播放，切换应用不中断</li>
+              <li>迷你播放器随手唤出</li>
+            </ul>
+          </div>
+          <figure class="phone-figure reveal" data-delay="160">
+            <div class="mini-phone"><img src="assets/shots/player-mobile.jpg" alt="手机端播放器" loading="lazy" width="780" height="1688"></div>
+            <figcaption><span>02</span>播放 · 沉浸歌词</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section sources-section" id="sources">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="eyebrow">SOURCES</span>
+          <h2>把喜欢的平台，<br>放在一起。</h2>
+          <p>不改变你的收听习惯，只是让它们住在同一个地方。</p>
+        </header>
+
+        <div class="source-grid">
+          <article class="source-card reveal" style="--source:#EC4141">
+            <div class="source-top"><span class="source-logo">网</span><span class="source-state">可播放</span></div>
+            <h3>网易云音乐</h3>
+            <p>曲库、封面与歌词最完整，默认主音源。</p>
+            <span class="source-foot">SEARCH · PLAY · LYRICS</span>
+          </article>
+          <article class="source-card reveal" data-delay="60" style="--source:#FFB800">
+            <div class="source-top"><span class="source-logo">酷</span><span class="source-state">可播放</span></div>
+            <h3>酷我音乐</h3>
+            <p>直链稳定，换源时的可靠备选。</p>
+            <span class="source-foot">SEARCH · PLAY</span>
+          </article>
+          <article class="source-card reveal" data-delay="120" style="--source:#2CA2F9">
+            <div class="source-top"><span class="source-logo">狗</span><span class="source-state">可播放</span></div>
+            <h3>酷狗音乐</h3>
+            <p>海量曲库与 KRC 歌词，覆盖更多版本。</p>
+            <span class="source-foot">SEARCH · PLAY · LYRICS</span>
+          </article>
+          <article class="source-card reveal" data-delay="180" style="--source:#31C27C">
+            <div class="source-top"><span class="source-logo">Q</span><span class="source-state">可播放</span></div>
+            <h3>QQ 音乐</h3>
+            <p>正版曲库，会员曲目可自动换源。</p>
+            <span class="source-foot">SEARCH · PLAY</span>
+          </article>
+          <article class="source-card reveal" data-delay="240" style="--source:#E6006F">
+            <div class="source-top"><span class="source-logo">咪</span><span class="source-state is-soft">仅搜索</span></div>
+            <h3>咪咕音乐</h3>
+            <p>提供搜索与元数据，播放时自动切换。</p>
+            <span class="source-foot">SEARCH · METADATA</span>
+          </article>
+          <article class="source-card source-demo reveal" data-delay="300">
+            <div class="source-top"><span class="source-logo">M</span><span class="source-state is-mint">离线</span></div>
+            <h3>MuseFlow 录音室</h3>
+            <p>8 首原创氛围示例曲，没有网络也能听。</p>
+            <span class="source-foot">ORIGINAL · OFFLINE</span>
+          </article>
+        </div>
+
+        <p class="sources-note reveal">部分会员或版权受限曲目会自动换源。所有音乐版权归各平台及版权方所有。</p>
+      </div>
+    </section>
+
+    <section class="section experience-section">
+      <div class="container experience-grid">
+        <div class="lyric-stage reveal" aria-hidden="true">
+          <div class="lyric-stage-bg"></div>
+          <div class="lyric-panel">
+            <span class="lyric-label">LYRICS · 歌词</span>
+            <p class="lyric-dim">潮汐 · Tides</p>
+            <p class="lyric-dim">海面把月光揉成一片银</p>
+            <p class="lyric-active">风从很远的地方赶来</p>
+            <p class="lyric-dim">我们站在退潮之后的岸边</p>
+            <p class="lyric-dim">听见世界缓慢的呼吸</p>
+          </div>
+          <div class="lyric-player-mini">
+            <img src="assets/shots/cover-01.jpg" alt="" loading="lazy">
+            <div><strong>潮汐</strong><span>LUMA</span></div>
+            <div class="mini-controls"><span></span><b></b><span></span></div>
+          </div>
+        </div>
+
+        <div class="experience-copy reveal" data-delay="100">
+          <span class="eyebrow">EXPERIENCE</span>
+          <h2>把复杂，<br>留在界面之外。</h2>
+          <p>音源切换、歌词解析、播放队列、下载缓存——这些不该成为负担。MuseFlow 把它们收进干净的交互里，只留下音乐。</p>
+          <div class="experience-list">
+            <div><span>01</span><div><strong>睡眠定时</strong><p>15 到 90 分钟，到点自动暂停。</p></div></div>
+            <div><span>02</span><div><strong>三档音质</strong><p>标准、高品质与无损，按网络自由选择。</p></div></div>
+            <div><span>03</span><div><strong>本地优先</strong><p>收藏与歌单只保存在这台设备。</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="download-section" id="download">
+      <div class="container">
+        <div class="download-card reveal">
+          <div class="download-glow" aria-hidden="true"></div>
+          <div class="download-copy">
+            <span class="eyebrow">GET THE APP</span>
+            <h2>把整个音乐宇宙，<br>装进口袋。</h2>
+            <p>下载 MuseFlow 1.0，支持 Android arm64 设备。安装包约 21 MB，无需注册账号。</p>
+
+            <div class="download-meta">
+              <span><b>v1.0.0</b>版本</span>
+              <span><b>21 MB</b>大小</span>
+              <span><b>arm64</b>架构</span>
+              <span><b>5.0+</b>Android</span>
+            </div>
+
+            <div class="download-actions">
+              <a class="btn btn-primary" href="downloads/MuseFlow-1.0.0-arm64.apk" download>
+                下载 APK
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4.5-4.5M12 14l-4.5-4.5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a class="btn btn-ghost" href="https://github.com/richardliuxc/MuseFlow" target="_blank" rel="noopener">查看源码</a>
+            </div>
+            <p class="download-hint">安装前请在系统中允许「安装未知来源应用」。若浏览器提示风险，选择“仍要下载”。</p>
+          </div>
+
+          <div class="download-art" aria-hidden="true">
+            <div class="orbit orbit-a"></div>
+            <div class="orbit orbit-b"></div>
+            <div class="download-icon"><img src="assets/app-icon.png" alt="" width="1024" height="1024"></div>
+            <div class="download-chip chip-a"><i></i> 5 SOURCES</div>
+            <div class="download-chip chip-b"><i></i> OFFLINE READY</div>
+          </div>
+        </div>
+
+        <div class="download-legal">
+          <p>MuseFlow 是本地音乐聚合客户端，不存储或托管任何音频文件。所有音乐版权归各平台与版权方所有，应用仅供个人学习、研究与体验，请支持正版音乐。</p>
+          <span>© 2026 MuseFlow Studio</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="#top" aria-label="MuseFlow 首页">
+          <span class="brand-mark"><img src="assets/app-icon-256.png" alt="" width="256" height="256"></span>
+          <span class="brand-type"><strong>MuseFlow</strong><small>沐声 · MUSIC IN FLOW</small></span>
+        </a>
+        <p>让声音，自然流动。<br>Every sound, your flow.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>产品</h4>
+        <a href="#features">功能</a>
+        <a href="#screens">界面</a>
+        <a href="#sources">音源</a>
+        <a href="#download">下载</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>资源</h4>
+        <a href="https://github.com/richardliuxc/MuseFlow" target="_blank" rel="noopener">GitHub</a>
+        <a href="downloads/MuseFlow-1.0.0-arm64.apk" download>安装包</a>
+        <a href="#download">版本说明</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>关于</h4>
+        <a href="#top">品牌</a>
+        <a href="#download">免责声明</a>
+        <a href="https://github.com/richardliuxc/MuseFlow/issues" target="_blank" rel="noopener">反馈问题</a>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© <span id="year">2026</span> MuseFlow Studio. All rights reserved.</span>
+      <span class="footer-tag">DESIGNED FOR LISTENING · BUILT FOR EVERY SCREEN</span>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

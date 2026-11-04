@@ -135,6 +135,20 @@ adb install -r build/app/outputs/flutter-apk/app-release.apk
 - **离线下载**：仅 App / 桌面端支持，文件保存在应用文档目录 `MuseFlow/Downloads`。
 - **后台播放**：iOS 已声明 `audio` 后台模式；Android 目前由 just_audio 持有一个前台音频会话，后续可接入 `audio_service` 获得系统媒体通知。
 
+## 产品落地页
+
+`landing/` 下是可直接部署的静态产品官网，包含 Hero 手机预览、功能 Bento、界面截图切换、音源介绍、APK 下载与响应式移动菜单。
+
+```bash
+cd landing
+python3 -m http.server 8092
+# 打开 http://localhost:8092/
+```
+
+落地页零外部依赖（字体、图片、APK 全部本地），可直接部署到 GitHub Pages / Cloudflare Pages。详细说明见 [`landing/README.md`](landing/README.md)。
+
+![MuseFlow 产品落地页](docs/landing.jpg)
+
 ## 测试
 
 ```bash
