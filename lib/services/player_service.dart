@@ -8,6 +8,7 @@ import 'package:just_audio/just_audio.dart';
 import '../core/lrc.dart';
 import '../core/utils.dart';
 import '../models/song.dart';
+import 'audio_handler.dart';
 import 'library_store.dart';
 import 'music_repository.dart';
 import 'music_source.dart';
@@ -16,13 +17,17 @@ class PlayerService extends ChangeNotifier {
   PlayerService({
     required MusicRepository repository,
     required LibraryStore library,
+    MuseAudioHandler? audioHandler,
   })  : _repository = repository,
-        _library = library {
+        _library = library,
+        _audioHandler = audioHandler {
+    _audioHandler?.bind(this);
     _configure();
   }
 
   final MusicRepository _repository;
   final LibraryStore _library;
+  final MuseAudioHandler? _audioHandler;
   final AudioPlayer _player = AudioPlayer();
   final Random _random = Random();
 
@@ -71,6 +76,7 @@ class PlayerService extends ChangeNotifier {
   bool get hasNext => _queue.isNotEmpty;
 
   Stream<ProcessingState> get processingStateStream => _player.processingStateStream;
+  ProcessingState get processingState => _player.processingState;
 
   Future<void> _configure() async {
     try {
@@ -171,6 +177,7 @@ class PlayerService extends ChangeNotifier {
       }
       _stream = stream;
       if (token != _loadToken) return;
+      _audioHandler?.updateNowPlaying(stream.song);
       _resolving = false;
       _notice = stream.note;
       if (stream.note != null) _noticeSeq++;
@@ -216,7 +223,33 @@ class PlayerService extends ChangeNotifier {
     try {
       await _player.seek(value);
       position.value = value;
+      _audioHandler?.syncPlayback(this);
     } catch (_) {}
+  }
+
+  Future<void> resumeFromNotification() async {
+    if (current == null) return;
+    if (_player.processingState == ProcessingState.completed) {
+      await _player.seek(Duration.zero);
+    }
+    if (!_player.playing) {
+      unawaited(_player.play());
+      notifyListeners();
+    }
+  }
+
+  Future<void> pauseFromNotification() async {
+    if (_player.playing) {
+      await _player.pause();
+      notifyListeners();
+    }
+  }
+
+  Future<void> stopFromNotification() async {
+    await _player.stop();
+    _resolving = false;
+    position.value = Duration.zero;
+    notifyListeners();
   }
 
   Future<void> setVolume(double value) async {
@@ -399,6 +432,12 @@ class PlayerService extends ChangeNotifier {
 
   void clearNotice() {
     _notice = null;
+  }
+
+  @override
+  void notifyListeners() {
+    super.notifyListeners();
+    if (!_disposed) _audioHandler?.syncPlayback(this);
   }
 
   @override

@@ -1,7 +1,10 @@
+import 'package:audio_service/audio_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'app.dart';
+import 'services/audio_handler.dart';
 import 'services/library_store.dart';
 import 'services/settings_store.dart';
 
@@ -15,7 +18,28 @@ Future<void> main() async {
       systemNavigationBarIconBrightness: Brightness.light,
     ),
   );
+  MuseAudioHandler? audioHandler;
+  if (!kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS)) {
+    try {
+      final handler = await AudioService.init(
+        builder: MuseAudioHandler.new,
+        config: AudioServiceConfig(
+          androidNotificationChannelId: 'app.museflow.playback',
+          androidNotificationChannelName: 'MuseFlow 播放控制',
+          androidNotificationOngoing: true,
+          androidStopForegroundOnPause: false,
+          androidNotificationIcon: 'mipmap/ic_launcher',
+        ),
+      );
+      audioHandler = handler;
+    } catch (error, stackTrace) {
+      debugPrint('Media notification unavailable: $error\n$stackTrace');
+    }
+  }
+
   final settings = await SettingsStore.load();
   final library = await LibraryStore.load();
-  runApp(MuseFlowApp(settings: settings, library: library));
+  runApp(MuseFlowApp(settings: settings, library: library, audioHandler: audioHandler));
 }

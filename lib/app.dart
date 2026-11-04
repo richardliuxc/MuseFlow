@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'core/theme.dart';
+import 'services/audio_handler.dart';
 import 'services/download_service.dart';
 import 'services/library_store.dart';
 import 'services/music_repository.dart';
@@ -17,10 +18,12 @@ class MuseFlowApp extends StatefulWidget {
     super.key,
     required this.settings,
     required this.library,
+    this.audioHandler,
   });
 
   final SettingsStore settings;
   final LibraryStore library;
+  final MuseAudioHandler? audioHandler;
 
   @override
   State<MuseFlowApp> createState() => _MuseFlowAppState();
@@ -35,7 +38,11 @@ class _MuseFlowAppState extends State<MuseFlowApp> {
   void initState() {
     super.initState();
     _repository = MusicRepository(settings: widget.settings);
-    _player = PlayerService(repository: _repository, library: widget.library);
+    _player = PlayerService(
+      repository: _repository,
+      library: widget.library,
+      audioHandler: widget.audioHandler,
+    );
     _downloads = DownloadService(repository: _repository, library: widget.library);
   }
 
