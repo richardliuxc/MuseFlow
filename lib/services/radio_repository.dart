@@ -30,11 +30,15 @@ class RadioRepository {
     final stations = await all();
     final q = query.trim().toLowerCase();
     return stations.where((station) {
-      if (region != null && region.isNotEmpty && station.region != region)
+      if (region != null && region.isNotEmpty && station.region != region) {
         return false;
-      if (genre != null && genre.isNotEmpty && station.genre != genre)
+      }
+      if (genre != null && genre.isNotEmpty && station.genre != genre) {
         return false;
-      if (q.isEmpty) return true;
+      }
+      if (q.isEmpty) {
+        return true;
+      }
       final haystack =
           '${station.name} ${station.country} ${station.genre} ${station.tags.join(' ')}'
               .toLowerCase();
