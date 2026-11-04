@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/theme.dart';
 import '../../data/demo_catalog.dart';
@@ -173,17 +172,7 @@ class SettingsScreen extends StatelessWidget {
                     const _ActionTile(
                       icon: Icons.info_outline_rounded,
                       title: 'MuseFlow 沐声',
-                      subtitle: '版本 1.0.0 (Build 1) · Flutter',
-                    ),
-                    const Divider(height: 1, indent: 18, endIndent: 18),
-                    _ActionTile(
-                      icon: Icons.code_rounded,
-                      title: '开源参考 · go-music-dl',
-                      subtitle: '多平台音乐搜索与下载的接口设计参考',
-                      onTap: () => launchUrl(
-                        Uri.parse('https://github.com/guohuiyuan/go-music-dl'),
-                        mode: LaunchMode.externalApplication,
-                      ),
+                      subtitle: '版本 1.0.0 (Build 1)',
                     ),
                     const Divider(height: 1, indent: 18, endIndent: 18),
                     _ActionTile(
@@ -218,7 +207,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     const Text(
-                      'Made with Flutter · 2026',
+                      '© 2026 MuseFlow Studio',
                       style: TextStyle(fontSize: 8.5, color: AppColors.textTertiary),
                     ),
                   ],
