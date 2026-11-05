@@ -26,11 +26,11 @@ Future<void> main() async {
     try {
       final handler = await AudioService.init(
         builder: MuseAudioHandler.new,
-        config: AudioServiceConfig(
+        config: const AudioServiceConfig(
           androidNotificationChannelId: 'app.museflow.playback',
           androidNotificationChannelName: 'MuseFlow 播放控制',
           androidNotificationOngoing: true,
-          androidStopForegroundOnPause: false,
+          androidStopForegroundOnPause: true,
           androidNotificationIcon: 'mipmap/ic_launcher',
         ),
       );

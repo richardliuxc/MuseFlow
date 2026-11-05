@@ -53,6 +53,7 @@ class PlayerService extends ChangeNotifier {
   List<LyricLine> _lyrics = const [];
   bool _lyricsLoading = false;
   Timer? _sleepTimer;
+  Timer? _idleStopTimer;
   Duration? _sleepRemaining;
 
   final ValueNotifier<Duration> position = ValueNotifier(Duration.zero);
@@ -92,7 +93,9 @@ class PlayerService extends ChangeNotifier {
     try {
       final session = await AudioSession.instance;
       await session.configure(const AudioSessionConfiguration.music());
-      await session.setActive(true);
+      // Do not activate the audio session at app startup. just_audio activates it
+      // on play and releases it when playback stops; holding it while idle keeps
+      // audio focus and can contribute to background battery drain.
     } catch (_) {
       // Audio session is best-effort; playback still works on most platforms.
     }
@@ -111,6 +114,12 @@ class PlayerService extends ChangeNotifier {
     _player.playerStateStream.listen((state) {
       if (state.processingState == ProcessingState.completed) {
         _onCompleted();
+      }
+      if (state.playing) {
+        _idleStopTimer?.cancel();
+      } else if (state.processingState != ProcessingState.loading &&
+          state.processingState != ProcessingState.buffering) {
+        _scheduleIdleStop();
       }
       notifyListeners();
     });
@@ -210,6 +219,20 @@ class PlayerService extends ChangeNotifier {
       _error = errorText(error);
       notifyListeners();
     }
+  }
+
+  void _scheduleIdleStop() {
+    _idleStopTimer?.cancel();
+    if (_disposed || current == null) return;
+    _idleStopTimer = Timer(const Duration(minutes: 15), () {
+      if (_disposed || _player.playing) return;
+      final handler = _audioHandler;
+      if (handler != null) {
+        unawaited(handler.stop());
+      } else {
+        unawaited(_player.stop());
+      }
+    });
   }
 
   Future<void> _loadLyrics(Song song) async {
@@ -481,6 +504,7 @@ class PlayerService extends ChangeNotifier {
     _disposed = true;
     _library.removeListener(_onLibraryChanged);
     _sleepTimer?.cancel();
+    _idleStopTimer?.cancel();
     _player.dispose();
     position.dispose();
     duration.dispose();

@@ -178,6 +178,18 @@ adb install -r build/app/outputs/flutter-apk/app-release.apk
 
 项目提供的 arm64 安装包位于 `dist/MuseFlow-1.0.0-arm64.apk`（约 22 MB，包名 `app.museflow.museflow`，versionName `1.0.0`），使用本机自签名 keystore 完成签名（密钥与密码不纳入版本库），可直接安装；生产发布请替换为自己的正式签名。
 
+### 电池与后台
+
+Android 的媒体前台服务在**播放时**需要持有 `PARTIAL_WAKE_LOCK`，这是保证息屏后音频不断流的必要条件；真正的问题是暂停后没有释放。MuseFlow 已做以下处理：
+
+- 暂停时立即退出前台服务并释放 WakeLock，不再阻止系统休眠
+- 播放时持有 WakeLock，暂停/停止/播放结束后自动释放
+- 15 分钟无播放自动关闭媒体服务与通知，避免留下常驻进程
+- 不在 App 启动时激活 AudioSession，只在真正播放时由 just_audio 激活
+- 通知栏收藏、NAS 缓存和广播播放都不额外持有 WakeLock
+
+如果长时间**持续播放**（尤其是 24 小时广播或 NAS 串流），耗电和 WakeLock 属于正常现象；建议使用睡眠定时，或在长时间不听时暂停。部分华为/荣耀机型可在「设置 → 电池 → 应用启动管理」中允许 MuseFlow 后台运行，避免系统误杀播放服务。
+
 ### 平台说明
 
 - **Android / iOS / macOS**：可访问全部第三方音源；首次构建请允许网络权限（项目已配置）。
